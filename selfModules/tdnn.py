@@ -44,11 +44,7 @@ class TDNN(nn.Module):
 
         xs = [F.tanh(F.conv1d(x, kernel, bias=self.biases[i])) for i, kernel in enumerate(self.kernels)]
         xs_ = [x.shape for x in xs]
-        print('xs_ = %s' % xs_)
-        xs_ = [x.max(2, keepdim=True)[0].squeeze(2).shape for x in xs]
-        print('xs_ = %s' % xs_)
-        # xs = [x.max(2)[0].squeeze(2) for x in xs]
-        xs = [x.max(2, keepdim=True)[0].squeeze(2) for x in xs]
+        xs = [x.max(2)[0] for x in xs]
 
         x = t.cat(xs, 1)
         x = x.view(batch_size, seq_len, -1)

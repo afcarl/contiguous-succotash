@@ -15,7 +15,9 @@ if __name__ == "__main__":
         raise FileNotFoundError("word embeddings file was't found")
 
     parser = argparse.ArgumentParser(description='RVAE_dilated')
-    parser.add_argument('--num-iterations', type=int, default=25000, metavar='NI',
+    # DEFAULT 25000
+    parser.add_argument('--num-iterations', type=int, default=1000,
+                        metavar='NI',
                         help='num iterations (default: 25000)')
     parser.add_argument('--batch-size', type=int, default=45, metavar='BS',
                         help='batch size (default: 45)')
@@ -58,7 +60,7 @@ if __name__ == "__main__":
 
         ppl, kld = train_step(iteration, args.batch_size, args.use_cuda, args.dropout)
 
-        if iteration % 10 == 0:
+        if iteration % 100 == 0:
             print('\n')
             print('------------TRAIN-------------')
             print('----------ITERATION-----------')
@@ -69,7 +71,7 @@ if __name__ == "__main__":
             print(kld.data.cpu().numpy()[0])
             print('------------------------------')
 
-        if iteration % 10 == 0:
+        if iteration % 100 == 0:
             ppl, kld = validate(args.batch_size, args.use_cuda)
 
             ppl = ppl.data.cpu().numpy()[0]
@@ -86,7 +88,7 @@ if __name__ == "__main__":
             ppl_result += [ppl]
             kld_result += [kld]
 
-        if iteration % 20 == 0:
+        if iteration % 150 == 0:
             seed = np.random.normal(size=[1, parameters.latent_variable_size])
 
             sample = rvae.sample(batch_loader, 50, seed, args.use_cuda)

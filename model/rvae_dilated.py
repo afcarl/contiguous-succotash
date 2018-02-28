@@ -75,7 +75,7 @@ class RVAE_dilated(nn.Module):
 
             z = z * std + mu
 
-            kld = (-0.5 * t.sum(logvar - t.pow(mu, 2) - t.exp(logvar) + 1, 1)).mean().squeeze()
+            kld = (-0.5 * t.sum(logvar - t.pow(mu, 2) - t.exp(logvar) + 1, 1)).mean()
         else:
             kld = None
 
