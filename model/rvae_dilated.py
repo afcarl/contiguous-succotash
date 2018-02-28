@@ -46,9 +46,10 @@ class RVAE_dilated(nn.Module):
                  kld loss estimation
         """
 
-        assert parameters_allocation_check(self), \
-            'Invalid CUDA options. Parameters should be allocated in the same memory'
-        use_cuda = self.embedding.word_embed.weight.is_cuda
+#        assert parameters_allocation_check(self), \
+#            'Invalid CUDA options. Parameters should be allocated in the
+#        # same memory'
+#        use_cuda = self.embedding.word_embed.weight.is_cuda
 
         assert z is None and fold(lambda acc, parameter: acc and parameter is not None,
                                   [encoder_word_input, encoder_character_input, decoder_word_input],
