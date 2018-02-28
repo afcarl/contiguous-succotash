@@ -29,16 +29,15 @@ class RVAE_dilated(nn.Module):
         self.decoder = Decoder(self.params)
 
     def forward(self, drop_prob,
-                encoder_word_input=None, encoder_character_input=None,
+                encoder_word_input=None,
+                encoder_character_input=None,
                 decoder_word_input=None,
                 z=None):
         """
         :param encoder_word_input: An tensor with shape of [batch_size, seq_len] of Long type
         :param encoder_character_input: An tensor with shape of [batch_size, seq_len, max_word_len] of Long type
         :param decoder_word_input: An tensor with shape of [batch_size, max_seq_len + 1] of Long type
-
         :param drop_prob: probability of an element of decoder input to be zeroed in sense of dropout
-
         :param z: context if sampling is performing
 
         :return: unnormalized logits of sentence words distribution probabilities
@@ -49,7 +48,7 @@ class RVAE_dilated(nn.Module):
 #        assert parameters_allocation_check(self), \
 #            'Invalid CUDA options. Parameters should be allocated in the
 #        # same memory'
-#        use_cuda = self.embedding.word_embed.weight.is_cuda
+        use_cuda = self.embedding.word_embed.weight.is_cuda
 
         assert z is None and fold(lambda acc, parameter: acc and parameter is not None,
                                   [encoder_word_input, encoder_character_input, decoder_word_input],
@@ -99,10 +98,14 @@ class RVAE_dilated(nn.Module):
             input = [var.long() for var in input]
             input = [var.cuda() if use_cuda else var for var in input]
 
-            [encoder_word_input, encoder_character_input, decoder_word_input, _, target] = input
+            [encoder_word_input,
+             encoder_character_input,
+             decoder_word_input,
+             _, target] = input
 
             logits, kld = self(dropout,
-                               encoder_word_input, encoder_character_input,
+                               encoder_word_input,
+                               encoder_character_input,
                                decoder_word_input,
                                z=None)
 
@@ -115,6 +118,7 @@ class RVAE_dilated(nn.Module):
 
             logits = logits.view(batch_size, -1, self.params.word_vocab_size)
             target = target.view(batch_size, -1)
+            # FIXME: dimension
             ppl = perplexity(logits, target).mean()
 
             optimizer.zero_grad()

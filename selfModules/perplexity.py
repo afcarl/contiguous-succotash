@@ -17,6 +17,7 @@ class Perplexity(nn.Module):
         [batch_size, seq_len, input_size] = logits.size()
 
         logits = logits.view(-1, input_size)
+        # FIXME: dimension F.log_softmax(logits, dim=?)
         log_probs = F.log_softmax(logits)
         del logits
 

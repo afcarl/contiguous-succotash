@@ -34,8 +34,8 @@ class Decoder(nn.Module):
                  with shape of [batch_size, seq_len, word_vocab_size]
         """
 
-        assert parameters_allocation_check(self), \
-            'Invalid CUDA options. Parameters should be allocated in the same memory'
+        # assert parameters_allocation_check(self), \
+        #     'Invalid CUDA options. Parameters should be allocated in the same memory'
 
         [batch_size, seq_len, _] = decoder_input.size()
 
